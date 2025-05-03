@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <style>
+    body {
+      margin: 0;
+      background-color: transparent;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
+    .circle-container {
+      position: relative;
+      width: 200px;
+      height: 200px;
+    }
+
+    .progress-ring {
+      transform: rotate(-90deg);
+    }
+
+    .progress-ring__circle {
+      stroke: url(#gradient);
+      stroke-width: 16;
+      fill: transparent;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.5s ease;
+    }
+
+    .progress-ring__bg {
+      stroke: rgba(255, 255, 255, 0.1);
+      stroke-width: 16;
+      fill: transparent;
+    }
+
+    .percentage {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 32px;
+      color: white;
+    }
+
+    .goal-text {
+      margin-top: 12px;
+      color: white;
+      font-size: 18px;
+      letter-spacing: 2px;
+    }
+  </style>
+</head>
+<body>
+  <div class="circle-container">
+    <svg class="progress-ring" width="200" height="200">
+      <defs>
+        <linearGradient id="gradient" x1="1" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ff9a9e" />
+          <stop offset="100%" stop-color="#fad0c4" />
+        </linearGradient>
+      </defs>
+      <circle class="progress-ring__bg" cx="100" cy="100" r="85" />
+      <circle class="progress-ring__circle" cx="100" cy="100" r="85" />
+    </svg>
+    <div class="percentage" id="percent">0%</div>
+  </div>
+  <div class="goal-text" id="goalText">0 | 0</div>
+
+  <script>
+    // Valeurs à modifier selon ton objectif
+    const currentSubs = 7;
+    const goalSubs = 10;
+
+    const circle = document.querySelector(".progress-ring__circle");
+    const percentText = document.getElementById("percent");
+    const goalText = document.getElementById("goalText");
+
+    const radius = circle.r.baseVal.value;
+    const circumference = 2 * Math.PI * radius;
+
+    circle.style.strokeDasharray = `${circumference} ${circumference}`;
+    circle.style.strokeDashoffset = circumference;
+
+    function setProgress(percent) {
+      const offset = circumference - (percent / 100) * circumference;
+      circle.style.strokeDashoffset = offset;
+      percentText.textContent = `${percent}%`;
+      goalText.textContent = `${currentSubs} | ${goalSubs}`;
+    }
+
+    const progressPercent = Math.floor((currentSubs / goalSubs) * 100);
+    setProgress(progressPercent);
+  </script>
+</body>
+</html>
